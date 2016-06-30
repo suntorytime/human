@@ -16,7 +16,10 @@ var User = mongoose.model('User', new Schema({
 }));
 
 var app = express();
-app.set('view engine', 'jade');
+// app.set('view engine', 'jade');
+var exphbs = require('express-handlebars');
+app.engine('.hbs', exphbs({defaultLayout: 'layout', extname: '.hbs'}));
+app.set('view engine', '.hbs');
 
 // connect to mongoose
 mongoose.connect('mongodb://localhost/newauth');
@@ -67,11 +70,11 @@ function requireLogin(req, res, next) {
 }
 
 app.get('/', function(req, res) {
-  res.render('index.jade');
+  res.render('index');
 });
 
 app.get('/register', function(req, res) {
-  res.render('register.jade', { csrfToken: req.csrfToken() })
+  res.render('register', { csrfToken: req.csrfToken() })
 });
 
 app.post('/register', function(req, res) {
@@ -91,7 +94,7 @@ app.post('/register', function(req, res) {
         error = 'That email is already taken, please try another.';
       }
 
-      res.render('register.jade', { error: error });
+      res.render('register', { error: error });
     } else {
       res.redirect('/dashboard');
     }
@@ -99,26 +102,26 @@ app.post('/register', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-  res.render('login.jade', {csrfToken: req.csrfToken() })
+  res.render('login', {csrfToken: req.csrfToken() })
 });
 
 app.post('/login', function(req, res) {
   User.findOne({email: req.body.email}, function(err, user) {
     if (!user) {
-      res.render('login.jade', {error: "Invalid email or password"});
+      res.render('login', {error: "Invalid email or password"});
     } else {
       if (bcrypt.compareSync(req.body.password, user.password)) {
         req.session.user = user;
         res.redirect('/dashboard');
       } else {
-        res.render('login.jade', {error: 'Invalid email or password'})
+        res.render('login', {error: 'Invalid email or password'})
       }
     }
   });
 });
 
 app.get('/dashboard', requireLogin, function(req, res) {
-  res.render('dashboard.jade');
+  res.render('dashboard');
 });
 
 app.get('/logout', function(req, res) {
