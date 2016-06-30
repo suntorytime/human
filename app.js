@@ -52,6 +52,12 @@ app.use(function(req, res, next) {
   }
 });
 
+// jquery
+// app.use(require('express-jquery')('/jquery.js'));
+
+
+// end middleware
+
 function requireLogin(req, res, next) {
   if (!req.user) {
     res.redirect('/login');

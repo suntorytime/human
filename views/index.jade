@@ -2,8 +2,15 @@ extends base
 
 block vars
   - var title = 'Home'
+script.
+  $(document).ready(function() {
+    alert('Hello!');
+    $('.stuff').html('Hello world from div')
+  })
 
 block body
   h2 Auth!
   p.
     Welcome to the Auth page! Please <a href="/login">Login</a> or <a href="/register">register</a> to continue.
+  img#connect-health-data-btn(src='https://connect.humanapi.co/assets/button/blue.png')
+  div(class='stuff')
